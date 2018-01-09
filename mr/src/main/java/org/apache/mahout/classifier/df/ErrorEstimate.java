@@ -45,6 +45,8 @@ public final class ErrorEstimate {
       datasize++;
     }
 
+    if(datasize == 0)
+    	throw new IllegalArgumentException("Argument 'datasize' is 0");
     return nberrors / datasize;
   }
 
