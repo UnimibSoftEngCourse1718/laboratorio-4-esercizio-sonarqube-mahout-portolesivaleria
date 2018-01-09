@@ -72,7 +72,6 @@ public class ParallelSGDFactorizer extends AbstractFactorizer {
 
   private final PreferenceShuffler shuffler;
 
-  private int epoch = 1;
   /** place in user vector where the bias is stored */
   private static final int USER_BIAS_INDEX = 1;
   /** place in item vector where the bias is stored */
@@ -238,7 +237,7 @@ public class ParallelSGDFactorizer extends AbstractFactorizer {
       logger.info("starting to compute the factorization...");
     }
 
-    for (epoch = 1; epoch <= numEpochs; epoch++) {
+    for (int epoch = 1; epoch <= numEpochs; epoch++) {
       shuffler.stage();
 
       final double mu = getMu(epoch);
