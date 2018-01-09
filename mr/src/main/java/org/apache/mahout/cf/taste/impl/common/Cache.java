@@ -42,7 +42,7 @@ public final class Cache<K,V> implements Retriever<K,V> {
 
   private static final Object NULL = new Object();
   
-  private final FastMap<K,V> cache;
+  private final FastMap<K,V> memory;
   private final Retriever<? super K,? extends V> retriever;
   
   /**
@@ -70,7 +70,7 @@ public final class Cache<K,V> implements Retriever<K,V> {
   public Cache(Retriever<? super K,? extends V> retriever, int maxEntries) {
     Preconditions.checkArgument(retriever != null, "retriever is null");
     Preconditions.checkArgument(maxEntries >= 1, "maxEntries must be at least 1");
-    cache = new FastMap<K, V>(11, maxEntries);
+    memory = new FastMap<K, V>(11, maxEntries);
     this.retriever = retriever;
   }
   
@@ -88,8 +88,8 @@ public final class Cache<K,V> implements Retriever<K,V> {
   @Override
   public V get(K key) throws TasteException {
     V value;
-    synchronized (cache) {
-      value = cache.get(key);
+    synchronized (memory) {
+      value = memory.get(key);
     }
     if (value == null) {
       return getAndCacheValue(key);
@@ -106,8 +106,8 @@ public final class Cache<K,V> implements Retriever<K,V> {
    *          cache key
    */
   public void remove(K key) {
-    synchronized (cache) {
-      cache.remove(key);
+    synchronized (memory) {
+      memory.remove(key);
     }
   }
 
@@ -115,8 +115,8 @@ public final class Cache<K,V> implements Retriever<K,V> {
    * Clears all cache entries whose key matches the given predicate.
    */
   public void removeKeysMatching(MatchPredicate<K> predicate) {
-    synchronized (cache) {
-      Iterator<K> it = cache.keySet().iterator();
+    synchronized (memory) {
+      Iterator<K> it = memory.keySet().iterator();
       while (it.hasNext()) {
         K key = it.next();
         if (predicate.matches(key)) {
@@ -130,8 +130,8 @@ public final class Cache<K,V> implements Retriever<K,V> {
    * Clears all cache entries whose value matches the given predicate.
    */
   public void removeValueMatching(MatchPredicate<V> predicate) {
-    synchronized (cache) {
-      Iterator<V> it = cache.values().iterator();
+    synchronized (memory) {
+      Iterator<V> it = memory.values().iterator();
       while (it.hasNext()) {
         V value = it.next();
         if (predicate.matches(value)) {
@@ -147,8 +147,8 @@ public final class Cache<K,V> implements Retriever<K,V> {
    * </p>
    */
   public void clear() {
-    synchronized (cache) {
-      cache.clear();
+    synchronized (memory) {
+      memory.clear();
     }
   }
   
@@ -157,8 +157,8 @@ public final class Cache<K,V> implements Retriever<K,V> {
     if (value == null) {
       value = (V) NULL;
     }
-    synchronized (cache) {
-      cache.put(key, value);
+    synchronized (memory) {
+      memory.put(key, value);
     }
     return value;
   }
