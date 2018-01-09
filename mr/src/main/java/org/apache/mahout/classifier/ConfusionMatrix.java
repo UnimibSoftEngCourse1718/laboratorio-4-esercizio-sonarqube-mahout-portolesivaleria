@@ -84,6 +84,8 @@ public class ConfusionMatrix {
         correct += confusionMatrix[labelId][i];
       }
     }
+    if (labelTotal == 0)
+    	throw new IllegalArgumentException("Argument 'labelTotal' is 0");
     return 100.0 * correct / labelTotal;
   }
 
