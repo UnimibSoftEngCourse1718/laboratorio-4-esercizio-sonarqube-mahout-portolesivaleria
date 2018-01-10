@@ -32,16 +32,16 @@ public class RegressionResultAnalyzer {
 
   private static class Result {
     private final double actual;
-    private final double result;
-    Result(double actual, double result) {
+    private final double out;
+    Result(double actual, double out) {
       this.actual = actual;
-      this.result = result;
+      this.out = out;
     }
     double getActual() {
       return actual;
     }
     double getResult() {
-      return result;
+      return out;
     }
   }
   
@@ -51,14 +51,14 @@ public class RegressionResultAnalyzer {
    * 
    * @param actual
    *          The actual answer
-   * @param result
-   *          The regression result
+   * @param out
+   *          The regression out
    */
-  public void addInstance(double actual, double result) {
+  public void addInstance(double actual, double out) {
     if (results == null) {
       results = new ArrayList<>();
     }
-    results.add(new Result(actual, result));
+    results.add(new Result(actual, out));
   }
 
   /**
@@ -86,16 +86,16 @@ public class RegressionResultAnalyzer {
 
     for (Result res : results) {
       double actual = res.getActual();
-      double result = res.getResult();
-      if (Double.isNaN(result)) {
+      double out = res.getResult();
+      if (Double.isNaN(out)) {
         unpredictable++;
       } else {
         sumActual += actual;
         sumActualSquared += actual * actual;
-        sumResult += result;
-        sumResultSquared += result * result;
-        sumActualResult += actual * result;
-        double absolute = Math.abs(actual - result);
+        sumResult += out;
+        sumResultSquared += out * out;
+        sumActualResult += actual * out;
+        double absolute = Math.abs(actual - out);
         sumAbsolute += absolute;
         sumAbsoluteSquared += absolute * absolute;
         predictable++;
